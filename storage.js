@@ -6,32 +6,32 @@ var url = 'mongodb://localhost:27017/prober';
 
 var dal = {
 
-	connect: function (err, result) {
-		MongoClient.connect(url, function (error, db) {
-			if (error)
-				throw new Error(error);
-			console.log("Connected successfully to server");
-			result(db);
-		});
-	},
-	clearDrone: function (call) {
-		this.connect(null, function (db) {
-			db.collection('drones').drop(function (err, result) {
-				//callback(result);
-				db.close();
-			});
-		});
-	},
-	insertDrone: function (drone, callback) {
-		this.connect(null, function (db) {
-			db.collection('drones').insert(drone, function (err, result) {
-				//callback(result);
-                                console.log("Drones Saved");
-				db.close();
-			});
-		});
-	},
-        insertFiledeets: function (files, callback) {
+    connect: function (err, result) {
+        MongoClient.connect(url, function (error, db) {
+            if (error)
+                throw new Error(error);
+            console.log("Connected successfully to server");
+            result(db);
+        });
+    },
+    clearDrone: function (call) {
+        this.connect(null, function (db) {
+            db.collection('drones').drop(function (err, result) {
+                //callback(result);
+                db.close();
+            });
+        });
+    },
+    insertDrone: function (drone, callback) {
+        this.connect(null, function (db) {
+            db.collection('drones').insert(drone, function (err, result) {
+                //callback(result);
+                console.log("Drones Saved");
+                db.close();
+            });
+        });
+    },
+    insertFiledeets: function (files, callback) {
         this.connect(null, function (db) {
             db.collection('files').insert(files, function (err) {
                 db.close();
@@ -39,10 +39,28 @@ var dal = {
             });
         });
     },
-        clearFiledeets: function (call) {
+    clearFiledeets: function (call) {
         this.connect(null, function (db) {
             db.collection('files').drop(function (err) {
                 db.close();
+            });
+        });
+    },
+
+    clearContent: function (call) {
+        this.connect(null, function (db) {
+            db.collection('contents').drop(function (err) {
+                db.close();
+            });
+        });
+    },
+
+    insertContent: function (contents, callback) {
+        this.connect(null, function (db) {
+            db.collection('contents').insert(contents, function (err) {
+                db.close();
+
+                console.log("savedContent")
             });
         });
     }
