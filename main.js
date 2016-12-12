@@ -80,7 +80,7 @@ request(dronesSettings, function (error, response, dronesString) {
                             var content = JSON.parse(contentstring);
                             
                             content.forEach(function(content){
-                                var contentdetailsettings = new Setting('/files/' + filedetails.id + "/contents/" + content.id + '?format=json');
+                                var contentdetailsettings = new Settings('/files/' + filedetails.id + "/contents/" + content.id + '?format=json');
                                 request(contentdetailsettings, function(error, response, contentdetailstring){
                                    try{
                                        var contentdeets = Json.parse(contentdetailstring);
