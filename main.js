@@ -58,7 +58,7 @@ request(dronesSettings, function (error, response, dronesString) {
             var drone = JSON.parse(droneString);
             dal.insertDrone(new Drone(drone.id, drone.name, drone.mac_address, drone.location));
             
-            var dronelocsettings = new Settings("/files?drone_id.is=" + drone.id + "&format=json");
+            var dronelocsettings = new Settings("/files?drone_id.is=" + drone.id + "&format=json"); // moet &format zijn omdat er voor al een ander argument wordt meegestuurd (zie api documentatie)
             request(dronelocsettings, function (error, response, dronelocString) {
                
                 var droneloc = JSON.parse(dronelocString);
@@ -77,26 +77,26 @@ request(dronesSettings, function (error, response, dronesString) {
                     
                         var contents = new Settings('/files/' + filedetails.id + '/contents?format=json');
                         request(contents, function(error, respons, contentstring){
+                            try{
                             var content = JSON.parse(contentstring);
                             
                             content.forEach(function(content){
                                 var contentdetailsettings = new Settings('/files/' + filedetails.id + "/contents/" + content.id + '?format=json');
                                 request(contentdetailsettings, function(error, response, contentdetailstring){
                                    try{
-                                       var contentdeets = Json.parse(contentdetailstring);
-                                       dal.insertContent(contentdeets.id,
+                                       var contentdeets = JSON.parse(contentdetailstring);
+                                       dal.insertContent(new Content(
+                                                        contentdeets.id,
                                                         contentdeets.mac_address,
                                                         contentdeets.datetime,
                                                         contentdeets.rssi,
                                                         contentdeets.url,
-                                                        contentdeets.ref,
-                                                        drone.id,
-                                                        drone.name,
-                                                        drone.location
-                                                        );
+                                                        contentdeets.ref
+                                                      ));
                                    }catch (e){console.log(e);} 
                                 });
                             });
+                            }catch (e){console.log(e);} 
                           
                         });
                         
