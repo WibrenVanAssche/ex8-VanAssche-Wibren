@@ -16,10 +16,19 @@ var Settings = function (url) {
     };
 };
 
-var Drone = function (id, name, mac) {
+var Drone = function (id, name, mac, location) {
     this._id = id
     this.name = name;
     this.mac = mac;
+    this.location = location;
+};
+
+var File = function (id, date_first_record, date_last_record, date_loaded, contents_count ) {
+    this._id = id;
+    this.date_first_record = date_first_record;
+    this.date_last_record = date_last_record;
+    this.date_loaded = date_loaded;
+    this.contents_count = contents_count;
 };
 
 var dronesSettings = new Settings("/drones?format=json");
@@ -34,20 +43,19 @@ request(dronesSettings, function (error, response, dronesString) {
         var droneSettings = new Settings("/drones/" + drone.id + "?format=json");
         request(droneSettings, function (error, response, droneString) {
             var drone = JSON.parse(droneString);
-            //dal.insertDrone(new Drone(drone.id, drone.name, drone.mac_address));
-
+            dal.insertDrone(new Drone(drone.id, drone.name, drone.mac_address, drone.location));
+            
             var dronelocsettings = new Settings("/files?drone_id.is=" + drone.id + "&format=json");
             request(dronelocsettings, function (error, response, dronelocString) {
                 var droneloc = JSON.parse(dronelocString);
 
-
                 droneloc.forEach(function (filedetails) {
-                    var filedetailsSettings = new Settings('/files' + filedetails.id + "?format=json");
+                    var filedetailsSettings = new Settings('/files/' + filedetails.id + "?format=json");
                     request(filedetailsSettings, function (error, response, filedetailsstring) {
                         var filedeets = JSON.parse(filedetailsstring);
-                        dal.insertDrone(new Drone(drone.id, drone.name, drone.mac_address, drone.location, filedeets.date_first_record, filedeets.date_last_record));
+                        dal.insertFiledeets(new File(filedeets.id, filedeets.date_first_record, filedeets.date_last_record, filedeets.date_loaded, filedeets.contents_count));
                     });
-                });
+                }); 
 
             });
         });

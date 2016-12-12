@@ -20,16 +20,32 @@ var dal = {
 				//callback(result);
 				db.close();
 			});
-		})
+		});
 	},
 	insertDrone: function (drone, callback) {
 		this.connect(null, function (db) {
 			db.collection('drones').insert(drone, function (err, result) {
 				//callback(result);
+                                console.log("Drones Saved");
 				db.close();
 			});
 		});
-	}
+	},
+        insertFiledeets: function (files, callback) {
+        this.connect(null, function (db) {
+            db.collection('files').insert(files, function (err) {
+                db.close();
+                console.log("Files Saved");
+            });
+        });
+    },
+        clearFiledeets: function (call) {
+        this.connect(null, function (db) {
+            db.collection('files').drop(function (err) {
+                db.close();
+            });
+        });
+    }
 };
 
 module.exports = dal;
