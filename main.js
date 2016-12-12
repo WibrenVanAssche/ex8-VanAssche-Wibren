@@ -75,12 +75,12 @@ request(dronesSettings, function (error, response, dronesString) {
                                 filedeets.date_loaded, 
                                 filedeets.contents_count));
                     
-                        var contents = new Settings('/files/' + file.id + '/contents?format=json');
+                        var contents = new Settings('/files/' + filedetails.id + '/contents?format=json');
                         request(contents, function(error, respons, contentstring){
                             var content = JSON.parse(contentstring);
                             
                             content.forEach(function(content){
-                                var contentdetailsettings = new Setting('/files/' + file.id + "/contents/" + content.id + '?format=json');
+                                var contentdetailsettings = new Setting('/files/' + filedetails.id + "/contents/" + content.id + '?format=json');
                                 request(contentdetailsettings, function(error, response, contentdetailstring){
                                    try{
                                        var contentdeets = Json.parse(contentdetailstring);
@@ -92,9 +92,9 @@ request(dronesSettings, function (error, response, dronesString) {
                                                         contentdeets.ref,
                                                         drone.id,
                                                         drone.name,
-                                                        drone.location,
-                                                        )
-                                   }catch (e){console.log(e)} 
+                                                        drone.location
+                                                        );
+                                   }catch (e){console.log(e);} 
                                 });
                             });
                           
